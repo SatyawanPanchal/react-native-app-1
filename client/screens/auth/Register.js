@@ -1,64 +1,94 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
-
-const Register = () => {
+import React, { useState } from "react";
+import { Text, StyleSheet, ScrollView, Alert } from "react-native";
+import InputBox from "@/components/Forms/InputBox.js";
+import SubmitButton from "@/components/Forms/SubmitButton.js";
+const Register = ({navigation}) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const handleSubmit=()=>{
+    try {
+      setLoading(true);
+      if(!name || !email || !password)
+      {
+          Alert.alert("Please fill all fields");
+          setLoading(false);
+          return;
+      }
+      setLoading(false);
+      console.log('Registering Data ==>',{name,email,password});
+      
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      
+      
+    }
+  }
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.formTitle}>Register</Text>
 
       {/* Name Field */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Name</Text>
-        <TextInput style={styles.inputBox} placeholder="Enter your name" />
-      </View>
+      <InputBox
+        inputTitle={"Name"}
+        placeholder={"Enter your Name"}
+        keyboardType={"default"}
+        value={name}
+        setValue={setName}
+      />
+      <InputBox
+        inputTitle={"Email"}
+        placeholder={"Enter your Email"}
+        autoComplete="email"
+        keyboardType={"email-address"}
+        value={email}
+        setValue={setEmail}
+      />
+      <InputBox
+        inputTitle={"Password"}
+        placeholder={"Enter your Password"}
+        secureTextEntry={true}
+        value={password}
+        setValue={setPassword}
+      />
 
-      {/* Email Field */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Email</Text>
-        <TextInput style={styles.inputBox} placeholder="Enter your email" keyboardType="email-address" />
-      </View>
-
-      {/* Password Field */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Password</Text>
-        <TextInput style={styles.inputBox} placeholder="Enter your password" secureTextEntry />
-      </View>
+      <SubmitButton 
+      loading={loading} 
+      btnTitle={"Register"}
+      handleSubmit={handleSubmit}
+       />
+       <Text  style={styles.linkText}>
+        Already Registered <Text style={styles.logTxt} onPress={()=>navigation.navigate('Login')}>...Login Here</Text>
+       </Text>
+      {/* <Text>{JSON.stringify({name,email,password})}</Text> */}
     </ScrollView>
   );
 };
 
 export default Register;
 
-
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     padding: 20,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
   },
   formTitle: {
     fontSize: 28,
-    fontWeight: '700',
-    textAlign: 'center',
+    fontWeight: "700",
+    textAlign: "center",
     marginBottom: 30,
-    color: '#333',
+    color: "#333",
   },
-  inputContainer: {
-    marginBottom: 20,
-    width: '100%',
+  linkText:{
+   textAlign:'center',
+   fontSize:16,
   },
-  label: {
-    fontSize: 16,
-    marginBottom: 6,
-    color: '#444',
-  },
-  inputBox: {
-    height: 45,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    backgroundColor: '#fff',
-  },
+  logTxt:{
+    color:"red"
+
+  }
 });
